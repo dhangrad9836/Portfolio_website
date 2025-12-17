@@ -103,6 +103,28 @@
     </div>
 </section>
 
+{% if recent_posts %}
+<section id="blog-preview">
+    <h2>Recent Blog Posts</h2>
+    <div class="blog-preview-grid">
+        {% for post in recent_posts %}
+        <div class="blog-preview-card">
+            <div class="blog-preview-icon">{{ post.featured_image }}</div>
+            <div class="blog-preview-content">
+                <span class="blog-date">{{ post.created_date|date:"M d, Y" }}</span>
+                <h3><a href="{% url 'portfolio:blog_detail' post.slug %}">{{ post.title }}</a></h3>
+                <p>{{ post.excerpt }}</p>
+                <a href="{% url 'portfolio:blog_detail' post.slug %}" class="read-more">Read More →</a>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    <div style="text-align: center; margin-top: 2rem;">
+        <a href="{% url 'portfolio:blog_list' %}" class="cta-button">View All Posts</a>
+    </div>
+</section>
+{% endif %}
+
 <section id="contact">
     <h2>Get In Touch</h2>
     <div class="contact-content">

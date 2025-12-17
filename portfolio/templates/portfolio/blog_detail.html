@@ -1,0 +1,49 @@
+{% extends 'portfolio/base.html' %}
+
+{% block title %}{{ post.title }} - Django{% endblock %}
+
+{% block content %}
+<article class="blog-post">
+    <div class="blog-post-header">
+        <div class="blog-post-icon">{{ post.featured_image }}</div>
+        <h1>{{ post.title }}</h1>
+        <div class="blog-post-meta">
+            <span class="author">By {{ post.author.get_full_name|default:post.author.username }}</span>
+            <span class="separator">•</span>
+            <span class="date">{{ post.created_date|date:"F d, Y" }}</span>
+            {% if post.updated_date != post.created_date %}
+            <span class="separator">•</span>
+            <span class="updated">Updated {{ post.updated_date|date:"F d, Y" }}</span>
+            {% endif %}
+        </div>
+        <div class="blog-post-categories">
+            {% for category in post.categories.all %}
+            <span class="category-tag">{{ category.name }}</span>
+            {% endfor %}
+        </div>
+    </div>
+    
+    <div class="blog-post-content">
+        {{ post.content|linebreaks }}
+    </div>
+    
+    <div class="blog-post-footer">
+        <a href="{% url 'portfolio:blog_list' %}" class="back-link">← Back to Blog</a>
+    </div>
+</article>
+
+{% if related_posts %}
+<section class="related-posts">
+    <h2>You Might Also Like</h2>
+    <div class="related-posts-grid">
+        {% for related in related_posts %}
+        <div class="related-post-card">
+            <div class="related-post-icon">{{ related.featured_image }}</div>
+            <h3><a href="{% url 'portfolio:blog_detail' related.slug %}">{{ related.title }}</a></h3>
+            <p class="related-date">{{ related.created_date|date:"M d, Y" }}</p>
+        </div>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+{% endblock %}

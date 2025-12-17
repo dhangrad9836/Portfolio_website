@@ -1,0 +1,54 @@
+{% extends 'portfolio/base.html' %}
+
+{% block title %}Blog - Django{% endblock %}
+
+{% block content %}
+<section class="blog-hero">
+    <h1>Blog</h1>
+    <p>Thoughts, tutorials, and insights on web development</p>
+</section>
+
+<section class="blog-section">
+    <div class="blog-grid">
+        {% for post in page_obj %}
+        <article class="blog-card">
+            <div class="blog-card-icon">{{ post.featured_image }}</div>
+            <div class="blog-card-content">
+                <div class="blog-meta">
+                    <span class="blog-author">By {{ post.author.get_full_name|default:post.author.username }}</span>
+                    <span class="blog-date">{{ post.created_date|date:"M d, Y" }}</span>
+                </div>
+                <h2><a href="{% url 'portfolio:blog_detail' post.slug %}">{{ post.title }}</a></h2>
+                <p>{{ post.excerpt }}</p>
+                <div class="blog-categories">
+                    {% for category in post.categories.all %}
+                    <span class="category-tag">{{ category.name }}</span>
+                    {% endfor %}
+                </div>
+                <a href="{% url 'portfolio:blog_detail' post.slug %}" class="read-more-btn">Read More →</a>
+            </div>
+        </article>
+        {% empty %}
+        <div class="no-posts">
+            <p>No blog posts yet. Check back soon!</p>
+        </div>
+        {% endfor %}
+    </div>
+    
+    {% if page_obj.has_other_pages %}
+    <div class="pagination">
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}" class="page-link">← Previous</a>
+        {% endif %}
+        
+        <span class="page-current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+        </span>
+        
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}" class="page-link">Next →</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</section>
+{% endblock %}
